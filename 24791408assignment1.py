@@ -16,18 +16,43 @@ class Parser:
         self.position = 0
 
     def peek(self):
-        if self.position < len(self):
-            return self.text[self.pos]
+        if self.position < len(self.text):
+            return self.text[self.position]
         return ""
 
     def expect(self, char):
         if self.peek != char:
-            raise ParseError(f"Unexpected {char} at position {self.pos}") 
+            raise ParseError(f"Unexpected {char} at position {self.position}")
+            self.position += 1
 
     def skip_space(self):
         while self.peek == SPACE:
-            self.pos += 1
+            self.position += 1
 
+#1 method per grammer rule
+    def parse_input(self):
+        self.skip_space()
+
+    def parse_glyph(self):
+        if self.peek() not in GLYPHS:
+            raise ParseError(f"Glyph expected at position {self.position}")
+        self.position +=
+    
+
+    def parse_expression(self):
+        char = self.peek()
+        if char in DIGITS:
+            self.parse_numeral()
+        elif char in LETTERS:
+            self.parse_variable()
+        elif char in GLYPHS:
+            self.parse_glyph()
+        elif char == LAMBDA:
+            self.parse_abstraction()
+        elif char == "(":
+            self.parse_application()
+        else:
+            raise ParseError(f"Unexpected {char} at {self.position}")
 
 
 if __name__ == "__main__":
