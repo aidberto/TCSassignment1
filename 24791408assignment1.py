@@ -22,7 +22,7 @@ class Parser:
 
     def expect(self, char):
         if self.peek != char:
-            raise ParseError("ERROR") #todo
+            raise ParseError(f"Unexpected {char} at position {self.pos}") 
 
     def skip_space(self):
         while self.peek == SPACE:
