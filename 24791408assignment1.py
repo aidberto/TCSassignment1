@@ -8,7 +8,7 @@ LAMBDA = "λ"
 GLYPHS = set("+×∸⊤⊥←↑→↓∷Θ")
 VAR_TAIL = LETTERS | DIGITS | set("-")
 
-
+class ParseError(Exception):
 
 class Parser:
     def __init__(self):
@@ -20,9 +20,14 @@ class Parser:
             return self.text[self.pos]
         return ""
 
-    def expect(self):
+    def expect(self, char):
+        if self.peek != char:
+            raise ParseError("ERROR") #todo
 
     def skip_space(self):
+        while self.peek == SPACE:
+            self.pos += 1
+
 
 
 if __name__ == "__main__":
