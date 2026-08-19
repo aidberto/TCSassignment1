@@ -32,11 +32,9 @@ class Parser:
 #1 method per grammer rule
     def parse_input(self):
         self.skip_space()
+        self.parse_expression()
+        self.skip_space()
 
-    def parse_glyph(self):
-        if self.peek() not in GLYPHS:
-            raise ParseError(f"Glyph expected at position {self.position}")
-        self.position += 1    
 
     def parse_expression(self):
         char = self.peek()
