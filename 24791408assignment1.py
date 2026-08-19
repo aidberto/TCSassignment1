@@ -36,8 +36,7 @@ class Parser:
     def parse_glyph(self):
         if self.peek() not in GLYPHS:
             raise ParseError(f"Glyph expected at position {self.position}")
-        self.position +=
-    
+        self.position += 1    
 
     def parse_expression(self):
         char = self.peek()
@@ -54,6 +53,19 @@ class Parser:
         else:
             raise ParseError(f"Unexpected {char} at {self.position}")
 
+    def parse_numeral(self):
+        if self.peek() not in DIGITS:
+            raise ParseError(f"Unexpected {self.peek()} at position {self.position}")
+        self.position += 1
+        while self.peek() in DIGITS:
+            self.position += 1
+
+    def parse_glyph(self):
+        if self.peek() not in GLYPHS:
+            raise ParseError(f"Unexpected {self.peek()} at position {self.positon}")
+        self.position += 1
+
+
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
@@ -61,6 +73,6 @@ if __name__ == "__main__":
         sys.exit(2)
     try:
         print("Valid")
-    except error:
+    except ParseError as error: 
         print("Invalid:", error)
         sys.exit(1)
