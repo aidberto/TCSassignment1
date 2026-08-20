@@ -9,10 +9,10 @@ GLYPHS = set("+×∸⊤⊥←↑→↓∷Θ")
 VAR_TAIL = LETTERS | DIGITS | set("-")
 
 class ParseError(Exception):
-   print("test") 
+    pass
 
 class Parser:
-    def __init__(self):
+    def __init__(self, text):
         self.text = text
         self.position = 0
 
@@ -22,12 +22,12 @@ class Parser:
         return ""
 
     def expect(self, char):
-        if self.peek != char:
+        if self.peek() != char:
             raise ParseError(f"Unexpected {char} at position {self.position}")
-            self.position += 1
+        self.position += 1
 
     def skip_space(self):
-        while self.peek == SPACE:
+        while self.peek() == SPACE:
             self.position += 1
 
 #1 method per grammer rule
@@ -37,7 +37,7 @@ class Parser:
         self.skip_space()
 
         if self.position != len(self.text):
-            raise ParseError(f"Unexpected {self.peek()} at positon {self.positon}")
+            raise ParseError(f"Unexpected {self.peek()} at position {self.position}")
 
 
     def parse_expression(self):
@@ -71,7 +71,7 @@ class Parser:
 
     def parse_glyph(self):
         if self.peek() not  in GLYPHS:
-            raise ParseError(f"Unexpected {self.peek()} at position {self.positon}")
+            raise ParseError(f"Unexpected {self.peek()} at position {self.position}")
         self.position += 1
 
     def parse_abstraction(self):
@@ -99,8 +99,8 @@ if __name__ == "__main__":
         print("Invalid input")
         sys.exit(2)
     try:
-        Parser(sys.argv[1].parse_input)
-        print("Valid")
+        parser = Parser(sys.argv[1])
+        parser.parse_input()
     except ParseError as error: 
         print("Invalid:", error)
         sys.exit(1)
