@@ -9,6 +9,7 @@ GLYPHS = set("+×∸⊤⊥←↑→↓∷Θ")
 VAR_TAIL = LETTERS | DIGITS | set("-")
 
 class ParseError(Exception):
+   print("test") 
 
 class Parser:
     def __init__(self):
@@ -35,6 +36,9 @@ class Parser:
         self.parse_expression()
         self.skip_space()
 
+        if self.position != len(self.text):
+            raise ParseError(f"Unexpected {self.peek()} at positon {self.positon}")
+
 
     def parse_expression(self):
         char = self.peek()
@@ -59,9 +63,27 @@ class Parser:
             self.position += 1
 
     def parse_glyph(self):
-        if self.peek() not in GLYPHS:
+        if self.peek() not  in GLYPHS:
             raise ParseError(f"Unexpected {self.peek()} at position {self.positon}")
         self.position += 1
+
+    def parse_abstraction(self):
+        self.expect(LAMBDA)
+        self.skip_space()
+        self.parse_variable()
+        self.expect(DOT)
+        self.skip_space()
+        self.parse_expression()
+
+    def parse_application(self):
+        self.expect("(")
+        self.skip_space()
+        self.parse_expression()
+        self.expect(SPACE)
+        self.skip_space()
+        self.parse_expression()
+        self.skip_space()
+        self.expect(")")
 
 
 
