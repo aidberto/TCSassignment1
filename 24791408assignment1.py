@@ -21,9 +21,14 @@ class Parser:
             return self.text[self.position]
         return ""
 
+    def describe(self):
+        char = self.peek()
+        return repr(char) if char else "end of input"
+
     def expect(self, char):
         if self.peek() != char:
-            raise ParseError(f"Unexpected {char} at position {self.position}")
+            raise ParseError(
+                f"expected {char!r} but found {self.describe()} at position {self.position}")
         self.position += 1
 
     def skip_space(self):
@@ -53,31 +58,33 @@ class Parser:
         elif char == "(":
             self.parse_application()
         else:
-            raise ParseError(f"Unexpected {char} at {self.position}")
+            raise ParseError(f"unexpected {self.describe()} at position {self.position}")
 
     def parse_numeral(self):
         if self.peek() not in DIGITS:
-            raise ParseError(f"Unexpected {self.peek()} at position {self.position}")
+            raise ParseError(f"unexpected {self.describe()} at position {self.position}")
+
         self.position += 1
         while self.peek() in DIGITS:
             self.position += 1
 
     def parse_variable(self):
         if self.peek() not in LETTERS:
-            raise ParseError(f"Unexpected {self.peek()} at position {self.position}")
+            raise ParseError(f"unexpected {self.describe()} at position {self.position}")
         self.position += 1
         while self.peek() in VAR_TAIL:
             self.position += 1
 
     def parse_glyph(self):
         if self.peek() not  in GLYPHS:
-            raise ParseError(f"Unexpected {self.peek()} at position {self.position}")
+            raise ParseError(f"unexpected {self.describe()} at position {self.position}")
         self.position += 1
 
     def parse_abstraction(self):
         self.expect(LAMBDA)
         self.skip_space()
         self.parse_variable()
+        self.skip_space()
         self.expect(DOT)
         self.skip_space()
         self.parse_expression()
