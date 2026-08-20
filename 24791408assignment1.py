@@ -62,6 +62,13 @@ class Parser:
         while self.peek() in DIGITS:
             self.position += 1
 
+    def parse_variable(self):
+        if self.peek() not in LETTERS:
+            raise ParseError(f"Unexpected {self.peek()} at position {self.position}")
+        self.position += 1
+        while self.peek() in VAR_TAIL:
+            self.position += 1
+
     def parse_glyph(self):
         if self.peek() not  in GLYPHS:
             raise ParseError(f"Unexpected {self.peek()} at position {self.positon}")
@@ -92,6 +99,7 @@ if __name__ == "__main__":
         print("Invalid input")
         sys.exit(2)
     try:
+        Parser(sys.argv[1].parse_input)
         print("Valid")
     except ParseError as error: 
         print("Invalid:", error)
