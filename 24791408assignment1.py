@@ -30,7 +30,7 @@ class Parser:
         while self.peek() == SPACE:
             self.position += 1
 
-#1 method per grammer rule
+#1 method per grammer rule 
     def parse_input(self):
         self.skip_space()
         self.parse_expression()
