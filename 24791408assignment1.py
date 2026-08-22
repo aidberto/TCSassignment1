@@ -42,7 +42,7 @@ class Parser:
         self.skip_space()
 
         if self.position != len(self.text):
-            raise ParseError(f"Unexpected {self.peek()} at position {self.position}")
+            raise ParseError(f"Unexpected {self.describe()} at position {self.position}")
 
 
     def parse_expression(self):
