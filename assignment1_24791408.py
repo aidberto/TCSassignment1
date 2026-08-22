@@ -6,7 +6,7 @@ DOT = "."
 SPACE = " "
 LAMBDA = "λ"
 GLYPHS = set("+×∸⊤⊥←↑→↓∷Θ")
-VAR_TAIL = LETTERS | DIGITS | set("-")
+VARIABLE = LETTERS | DIGITS | set("-")
 
 class ParseError(Exception):
     pass
@@ -72,7 +72,7 @@ class Parser:
         if self.peek() not in LETTERS:
             raise ParseError(f"unexpected {self.describe()} at position {self.position}")
         self.position += 1
-        while self.peek() in VAR_TAIL:
+        while self.peek() in VARIABLE:
             self.position += 1
 
     def parse_glyph(self):
@@ -108,6 +108,7 @@ if __name__ == "__main__":
     try:
         parser = Parser(sys.argv[1])
         parser.parse_input()
-    except ParseError as error: 
+        print("Valid")
+    except ParseError as error:
         print("Invalid:", error)
         sys.exit(1)
