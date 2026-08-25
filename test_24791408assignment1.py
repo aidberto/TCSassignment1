@@ -5,7 +5,6 @@ import assignment1_24791408 as mod
 
 
 def parses(text):
-    """True if the parser accepts the text, False if it rejects it."""
     try:
         mod.Parser(text).parse_input()
         return True
@@ -20,8 +19,6 @@ def check(ok, message):
     if not ok:
         fails.append(message)
 
-
-# strings the parser SHOULD accept
 valid = [
     "0",
     "42",
@@ -40,11 +37,11 @@ valid = [
     "λh.(h 1)",
     "(λs.s λt.t)",
     "((a b) (c d))",
-    "(a  b)",   # extra spaces between the two parts are fine
-    "a-",       # dash allowed inside/at the end of a variable
+    "(a  b)", #extra spaces between the two parts are fine
+    "a-", #dash allowed inside/at the end of a variable
     "←",
     "007",
-    "×",        # every glyph is a valid expression on its own
+    "×", #every glyph is a valid expression on its own
     "∸",
     "⊥",
     "↑",
@@ -54,7 +51,6 @@ valid = [
     "Θ",
 ]
 
-# strings the parser SHOULD reject
 invalid = [
     "",
     "S",
@@ -66,17 +62,17 @@ invalid = [
     "λc c",
     "λ.d",
     "λ1.e",
-    "(1a)",     # no space between the two parts — these three are the only
-    "(+5)",     # cases that catch a parser whose mandatory-space check
-    "(x+)",     # (expect(SPACE) in parse_application) is broken
-    "(vw)",     # rejected too, but for a different reason: "vw" reads as ONE variable
+    "(1a)", # no space between the two parts
+    "(+5)", # ^
+    "(x+)", #^^
+    "(vw)", #reads as 1 variable 
     "()",
-    "λa.",      # missing body
-    "(a )",     # space but no second part
-    "a\n",      # trailing newline — skip_space only skips U+0020, not other whitespace
-    "\ta",      # leading tab — same reason
-    "λ-.e",     # bound name can't start with a dash
-    "λ×.×",     # bound name must be a variable, glyphs don't count
+    "λa.", # missing body
+    "(a )", # space but no second part
+    "a\n", # trailing newline skip_space only skips U+0020
+    "\ta", #leading tab ^
+    "λ-.e", # bound name can't start with a dash
+    "λ×.×", # bound name must be a variable, glyphs don't count
 ]
 
 for text in valid:
@@ -85,22 +81,19 @@ for text in valid:
 for text in invalid:
     check(not parses(text), repr(text) + " should be rejected")
 
-
-# --- exit-code checks: the spec grades these ---
-# 0 = valid expression, 1 = invalid expression, 2 = wrong number of arguments
+#0 = valid expression, 1 = invalid expression, 2 = wrong number of arguments
 
 def exit_code(arguments):
-    """Run the parser script with the given arguments and give back its exit code."""
     command = [sys.executable, mod.__file__] + arguments
     return subprocess.run(command, capture_output=True).returncode
 
 exit_checks = [
     (["(λk.k 9)"], 0),
     (["⊥"], 0),
-    (["(3z)"], 1),         # missing space, rejected at the command line too
-    (["λq q"], 1),         # missing dot
-    ([], 2),               # no argument at all
-    (["p", "q", "r"], 2),  # too many arguments
+    (["(3z)"], 1), #missing space
+    (["λq q"], 1), #missing dot
+    ([], 2), #no argument at all
+    (["p", "q", "r"], 2), #too many arguments
 ]
 
 for arguments, wanted in exit_checks:
